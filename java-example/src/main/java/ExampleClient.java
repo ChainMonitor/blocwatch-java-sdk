@@ -2,6 +2,7 @@ import com.blocwatch.client.v1.ApiException;
 import com.blocwatch.client.v1.model.bitcoin.BitcoinBlock;
 import com.blocwatch.client.v1.model.bitcoin.BitcoinCompareQuery;
 import com.blocwatch.client.v1.model.bitcoin.BitcoinQuery;
+import com.blocwatch.client.v1.model.bitcoin.BitcoinSearchRequest;
 import com.blocwatch.client.v1.model.bitcoin.GetBlockRequest;
 import com.blocwatch.client.v1.model.bitcoin.GetBlockResponse;
 import com.blocwatch.client.v1.model.bitcoin.GetTransactionRequest;
@@ -57,10 +58,11 @@ public class ExampleClient {
                     .field(BitcoinCompareQuery.FieldEnum.INPUTS)
                     .op(BitcoinCompareQuery.OpEnum.GREATER_THAN)
                     .value("10"));
+    BitcoinSearchRequest request = new BitcoinSearchRequest().query(query);
     ListTransactionsResponse txnSearchResponse =
         blocWatchClient
             .bitcoinTransactions()
-            .searchTransactions(query, Arrays.asList("basic", "summary"), 25, "");
+            .searchTransactions(request, Arrays.asList("basic", "summary"), 25, "");
     System.out.println(String.format("Retreived txnSearchResponse %s", txnSearchResponse));
   }
 }
