@@ -7,6 +7,8 @@ public class DefaultSleeper implements Sleeper {
 
   @Override
   public void sleep(Duration duration) throws InterruptedException {
-    Thread.sleep(duration.toMillis(), duration.getNano());
+    // duration.getNano returns all nanos within the second, including those contained within
+    // milliseconds. Use mod to extract just the nano portion:
+    Thread.sleep(duration.toMillis(), duration.getNano() % 1000000);
   }
 }

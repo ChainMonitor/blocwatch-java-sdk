@@ -10,6 +10,7 @@ import com.blocwatch.sdk.v1.support.ExponentialBackoffPolicy;
 import com.blocwatch.sdk.v1.support.RetryHttpRequestInterceptor;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 
@@ -74,15 +75,19 @@ public class BlocWatchClient {
     return apiClient.setBasePath(basePath);
   }
 
-
   private static RestTemplate buildRestTemplate() {
     List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+    RestTemplate restTemplate = new RestTemplate();
+    // Allow debugging to read the response stream a second time (causes responeses to be buffered
+    // in memory):
+    restTemplate.setRequestFactory(
+        new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
     // The retry interceptor doesn't pay well with the default request factory. The retry
     // interceptor is required to be the last interceptor in the chain.
     interceptors.add(
         new RetryHttpRequestInterceptor(ExponentialBackoffPolicy.DEFAULT, new DefaultSleeper()));
-    RestTemplate restTemplate = new RestTemplate();
     restTemplate.setInterceptors(interceptors);
+
     return restTemplate;
   }
 }
