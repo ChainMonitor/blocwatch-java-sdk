@@ -64,6 +64,13 @@ public class BlocwatchJava extends AbstractJavaCodegen {
     supportingFiles.add(new SupportingFile("auth/OAuth.mustache", authFolder, "OAuth.java"));
     supportingFiles.add(
         new SupportingFile("auth/OAuthFlow.mustache", authFolder, "OAuthFlow.java"));
+
+    // Use instant for dates & date-times:
+    typeMapping.put("date", "Instant");
+    typeMapping.put("DateTime", "Instant");
+    importMapping.put("Instant", "java.time.Instant");
+    importMapping.remove("OffsetDateTime");
+    importMapping.remove("LocalDateTime");
   }
 
   @Override
